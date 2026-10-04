@@ -67,21 +67,19 @@ O Spring Security protege as rotas e mantém a proteção CSRF ativada. As senha
 
 ## Documentação acadêmica
 
-O material editável para a documentação está em `docs/documentacao.html`. Ele usa uma folha de impressão com margens e tipografia acadêmicas como base ABNT. Complete os campos de autoria, instituição, curso, cidade e ano antes da entrega e exporte a página para PDF pelo navegador.
+O material editável para a documentação está em `docs/documentacao.html`, e o PDF está em `docs/documentacao.pdf`. A capa já contém o nome do estudante, instituição, curso, cidade e ano informados. O texto usa papel A4, Arial 12, espaçamento 1,5, recuo de parágrafo e margens acadêmicas como base. Confira o manual da instituição para ajustes locais antes da entrega.
 
 ## Git e GitHub
 
 O `.gitignore` exclui arquivos de ambiente e a pasta de compilação. Um fluxo Gitflow básico começa com `main` para versões estáveis e `develop` para integração. Crie branches `feature/nome-da-tarefa` a partir de `develop`, integre-as de volta em `develop` e publique versões estáveis em `main`.
 
-Para publicar em um repositório pessoal separado do PFC, crie um repositório público vazio no GitHub e execute os comandos abaixo, substituindo `SEU-USUARIO` pelo nome da sua conta:
+Para publicar este repositório em um GitHub pessoal separado do PFC, crie um repositório público vazio no GitHub e configure-o como remoto. Substitua `SEU-USUARIO` pelo nome da sua conta:
 
 ```powershell
-git init --initial-branch=main
-git add .
-git commit -m "chore: inicia sistema de login seguro"
-git switch -c develop
 git remote add origin https://github.com/SEU-USUARIO/login-seguro.git
+git switch main
 git push -u origin main
+git switch develop
 git push -u origin develop
 ```
 
