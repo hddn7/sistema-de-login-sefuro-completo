@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Administrador | Login Seguro</title>
+    <link rel="stylesheet" th:href="@{/css/{arquivo}.css(arquivo=${tema})}">
+</head>
+<body>
+<header th:replace="~{fragments/cabecalho :: cabecalho}"></header>
+<main class="conteudo">
+    <p class="sobretitulo">área restrita</p>
+    <h1>Painel do administrador</h1>
+    <p>Gerencie os perfis e as contas cadastradas.</p>
+    <p class="etiqueta-perfil">perfil: administrador</p>
+    <p class="mensagem erro" th:if="${erro}" th:text="${erro}"></p>
+    <p class="mensagem sucesso" th:if="${sucesso}" th:text="${sucesso}"></p>
+
+    <div class="tabela-rolagem">
+        <table>
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Perfil</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="usuario : ${usuarios}">
+                <td th:text="${usuario.nome}"></td>
+                <td th:text="${usuario.email}"></td>
+                <td th:text="${usuario.perfil}"></td>
+                <td class="acoes-usuario">
+                    <form th:action="@{/admin/usuarios/{id}/perfil(id=${usuario.id})}" method="post">
+                        <select name="perfil" aria-label="Novo perfil">
+                            <option value="ALUNO" th:selected="${usuario.perfil == 'ALUNO'}">Aluno</option>
+                            <option value="PROFESSOR" th:selected="${usuario.perfil == 'PROFESSOR'}">Professor</option>
+                            <option value="ADMIN" th:selected="${usuario.perfil == 'ADMIN'}">Administrador</option>
+                        </select>
+                        <button type="submit">Salvar</button>
+                    </form>
+                    <form th:action="@{/admin/usuarios/{id}/excluir(id=${usuario.id})}" method="post">
+                        <button class="botao-excluir" type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(usuarios)}">
+                <td colspan="4">Nenhum usuário cadastrado.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

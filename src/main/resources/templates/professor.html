@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Professor | Login Seguro</title>
+    <link rel="stylesheet" th:href="@{/css/{arquivo}.css(arquivo=${tema})}">
+</head>
+<body>
+<header th:replace="~{fragments/cabecalho :: cabecalho}"></header>
+<main class="conteudo">
+    <p class="sobretitulo">área restrita</p>
+    <h1>Painel do professor</h1>
+    <p>Esta página é acessível somente ao perfil PROFESSOR.</p>
+    <p class="etiqueta-perfil">perfil: professor</p>
+</main>
+</body>
+</html>

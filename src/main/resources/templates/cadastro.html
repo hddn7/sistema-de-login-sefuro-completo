@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cadastro | Login Seguro</title>
+    <link rel="stylesheet" th:href="@{/css/{arquivo}.css(arquivo=${tema})}">
+</head>
+<body>
+<main class="pagina-acesso pagina-cadastro">
+    <section class="formulario">
+        <p class="sobretitulo">crie sua conta</p>
+        <h1>Cadastro</h1>
+        <p class="apoio">O novo usuário será cadastrado como aluno.</p>
+
+        <form th:action="@{/cadastro}" th:object="${form}" method="post">
+            <label for="nome">Nome</label>
+            <input id="nome" th:field="*{nome}" type="text" maxlength="80" autocomplete="name" required>
+            <small class="erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small>
+
+            <label for="email">E-mail</label>
+            <input id="email" th:field="*{email}" type="email" maxlength="120" autocomplete="email" required>
+            <small class="erro" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+
+            <label for="senha">Senha</label>
+            <input id="senha" th:field="*{senha}" type="password" minlength="8" maxlength="72" autocomplete="new-password" required>
+            <small class="erro" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></small>
+
+            <button class="botao-principal" type="submit">Criar conta</button>
+        </form>
+        <p class="alternativa">Já tem conta? <a th:href="@{/login}">Entrar</a></p>
+    </section>
+</main>
+</body>
+</html>
