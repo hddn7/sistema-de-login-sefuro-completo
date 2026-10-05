@@ -1,8 +1,8 @@
 # Sistema de Login Seguro
 
-Projeto de estudo com Java 17, Spring Boot, Spring Security, Thymeleaf e MongoDB. A estrutura separa telas, regras de negócio e acesso a dados para facilitar adaptações futuras.
+Este é um projeto de estudo para fazer cadastro e login de usuários. Ele usa Java 17, Spring Boot, Spring Security, Thymeleaf e MongoDB. As telas ficam separadas das regras do sistema, então dá para mudar o visual sem refazer o login.
 
-## Requisitos
+## O que precisa instalar
 
 - JDK 17 ou superior
 - Maven 3.6 ou superior
@@ -10,13 +10,13 @@ Projeto de estudo com Java 17, Spring Boot, Spring Security, Thymeleaf e MongoDB
 
 ## Configurar o MongoDB Atlas
 
-1. Crie um cluster no MongoDB Atlas e um usuário de banco de dados.
-2. Em **Network Access**, permita o endereço IP que será usado para a conexão.
-3. Copie a URI de conexão do Atlas.
-4. Substitua usuário, senha e nome do cluster na URI. Se a senha tiver caracteres especiais, faça a codificação própria para URI.
-5. Defina `MONGODB_URI` no terminal. Não salve a URI real no Git.
+1. Crie um cluster e um usuário de banco no MongoDB Atlas.
+2. Em **Network Access**, libere o endereço IP do computador que vai executar o projeto.
+3. Copie a URI de conexão. Troque os exemplos pelo usuário, senha e endereço do seu cluster.
+4. Se a senha tiver caracteres especiais, codifique-os para usar na URI.
+5. Guarde a URI em uma variável de ambiente. Não coloque sua senha no código nem no GitHub.
 
-No PowerShell, defina as variáveis antes de iniciar:
+No PowerShell, defina as variáveis antes de iniciar o sistema:
 
 ```powershell
 $env:MONGODB_URI = "mongodb+srv://USUARIO:SENHA@SEU-CLUSTER.mongodb.net/login_seguro?retryWrites=true&w=majority"
@@ -25,19 +25,19 @@ $env:ADMIN_EMAIL = "admin@seudominio.com"
 $env:ADMIN_PASSWORD = "use-uma-senha-forte-com-mais-de-8-caracteres"
 ```
 
-`ADMIN_EMAIL` e `ADMIN_PASSWORD` são opcionais. Se forem informados, o sistema cria o primeiro administrador se ainda não existir. A senha nunca é gravada sem hash.
+`ADMIN_EMAIL` e `ADMIN_PASSWORD` são opcionais. Se você informar os dois, o sistema cria a conta de administrador na primeira inicialização. A senha é salva com hash, não em texto aberto.
 
-Para executar com MongoDB local, não é necessário definir `MONGODB_URI`; a aplicação usa `mongodb://localhost:27017/login_seguro`.
+Se tiver o MongoDB instalado no computador, pode deixar `MONGODB_URI` sem definir. O projeto usa `mongodb://localhost:27017/login_seguro` como padrão.
 
 ## Executar
 
-Na pasta do projeto:
+Com o terminal aberto na pasta do projeto, rode:
 
 ```powershell
 mvn spring-boot:run
 ```
 
-Acesse `http://localhost:8080`. O cadastro público cria usuários com o perfil `ALUNO`. As sessões HTTP e os usuários são armazenados no MongoDB.
+Depois, abra `http://localhost:8080` no navegador. O formulário de cadastro cria uma conta de aluno. As contas e as sessões ficam salvas no MongoDB.
 
 ## Perfis
 
@@ -45,11 +45,11 @@ Acesse `http://localhost:8080`. O cadastro público cria usuários com o perfil 
 - `PROFESSOR`: acesso a `/professor`.
 - `ALUNO`: acesso a `/aluno`.
 
-O cadastro não permite escolher o próprio perfil. O administrador pode listar usuários, alterar seus perfis e excluir outras contas pela página `/admin`. O sistema impede que o administrador altere ou exclua a própria conta e que a última conta ADMIN seja removida.
+Quem se cadastra recebe o perfil `ALUNO`; não dá para escolher um perfil com mais acesso no formulário. O administrador pode ver as contas, trocar os perfis e excluir outros usuários em `/admin`. Para evitar bloqueio, o sistema não deixa o administrador excluir a própria conta nem remover o último administrador.
 
 ## Temas
 
-As páginas Thymeleaf ficam em `src/main/resources/templates` e o CSS em `src/main/resources/static/css`. O tema é escolhido por `APP_TEMA`; por exemplo, `APP_TEMA=padrao` carrega `padrao.css`. Uma nova aparência pode ser adicionada criando outro arquivo CSS, sem alterar o controle de acesso.
+As páginas ficam em `src/main/resources/templates`, e os estilos ficam em `src/main/resources/static/css`. A variável `APP_TEMA` escolhe o arquivo de estilo. Por exemplo, `APP_TEMA=padrao` carrega `padrao.css`. Para testar outro visual, crie outro CSS e troque o valor da variável.
 
 ## Estrutura do código
 
@@ -63,24 +63,20 @@ As páginas Thymeleaf ficam em `src/main/resources/templates` e o CSS em `src/ma
 
 ## Segurança
 
-O Spring Security protege as rotas e mantém a proteção CSRF ativada. As senhas são codificadas com BCrypt. A aplicação usa cookie de sessão `HttpOnly`; em produção, publique sempre atrás de HTTPS e restrinja os IPs permitidos no Atlas. Não use credenciais de desenvolvimento em produção.
+O Spring Security cuida do login, dos perfis e da proteção CSRF dos formulários. O BCrypt protege as senhas antes de elas irem para o banco. Em um sistema publicado de verdade, use HTTPS e limite os IPs autorizados no Atlas. Não reutilize a senha de teste em produção.
 
 ## Documentação acadêmica
 
-O material editável para a documentação está em `docs/documentacao.html`, e o PDF está em `docs/documentacao.pdf`. A capa já contém o nome do estudante, instituição, curso, cidade e ano informados. O texto usa papel A4, Arial 12, espaçamento 1,5, recuo de parágrafo e margens acadêmicas como base. Confira o manual da instituição para ajustes locais antes da entrega.
+O texto da documentação pode ser alterado em `docs/documentacao.html`; o PDF pronto está em `docs/documentacao.pdf`. A capa já está preenchida. O documento usa A4, Arial 12 e espaçamento 1,5. Antes de entregar, confira se a sua instituição pede algum ajuste específico.
 
 ## Git e GitHub
 
-O `.gitignore` exclui arquivos de ambiente e a pasta de compilação. Um fluxo Gitflow básico começa com `main` para versões estáveis e `develop` para integração. Crie branches `feature/nome-da-tarefa` a partir de `develop`, integre-as de volta em `develop` e publique versões estáveis em `main`.
+O Git já está organizado com as branches `main` e `develop`. A `main` guarda a versão estável, e a `develop` é onde as mudanças são reunidas. Para começar uma tarefa, crie uma branch com nome como `feature/minha-alteracao` a partir de `develop`.
 
-Para publicar este repositório em um GitHub pessoal separado do PFC, crie um repositório público vazio no GitHub e configure-o como remoto. Substitua `SEU-USUARIO` pelo nome da sua conta:
+O projeto está publicado no repositório público [sistema-de-login-sefuro-completo](https://github.com/hddn7/sistema-de-login-sefuro-completo). Para baixar uma cópia, use:
 
 ```powershell
-git remote add origin https://github.com/SEU-USUARIO/login-seguro.git
-git switch main
-git push -u origin main
-git switch develop
-git push -u origin develop
+git clone https://github.com/hddn7/sistema-de-login-sefuro-completo.git
 ```
 
 Antes de publicar, confirme que a URI do Atlas e senhas não estão em nenhum commit. Nunca faça commit de um arquivo `.env` com credenciais reais.
