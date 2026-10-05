@@ -1,6 +1,7 @@
 package br.com.loginseguro.controller;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -9,16 +10,13 @@ public class PaginaController {
 
     @GetMapping("/painel")
     public String painel(Authentication autenticacao) {
-        boolean administrador = autenticacao.getAuthorities().stream()
-                .anyMatch(perfil -> perfil.getAuthority().equals("ROLE_ADMIN"));
-        if (administrador) {
-            return "redirect:/admin";
-        }
-
-        boolean professor = autenticacao.getAuthorities().stream()
-                .anyMatch(perfil -> perfil.getAuthority().equals("ROLE_PROFESSOR"));
-        if (professor) {
-            return "redirect:/professor";
+        for (GrantedAuthority perfil : autenticacao.getAuthorities()) {
+            if (perfil.getAuthority().equals("ROLE_ADMIN")) {
+                return "redirect:/admin";
+            }
+            if (perfil.getAuthority().equals("ROLE_PROFESSOR")) {
+                return "redirect:/professor";
+            }
         }
         return "redirect:/aluno";
     }

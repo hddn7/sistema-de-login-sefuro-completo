@@ -1,7 +1,7 @@
 package br.com.loginseguro.controller;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
@@ -21,8 +21,6 @@ import br.com.loginseguro.repository.UsuarioRepository;
 @Controller
 public class AdminController {
 
-    private static final Set<String> PERFIS = Set.of("ADMIN", "PROFESSOR", "ALUNO");
-
     private final UsuarioRepository usuarioRepository;
     private final FindByIndexNameSessionRepository<? extends Session> sessoes;
 
@@ -35,10 +33,13 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String listarUsuarios(Model model) {
-        List<UsuarioResumo> usuarios = usuarioRepository.findAll().stream()
-                .map(usuario -> new UsuarioResumo(usuario.getId(), usuario.getNome(),
-                        usuario.getEmail(), usuario.getPerfil()))
-                .toList();
+        List<Usuario> listaDoBanco = usuarioRepository.findAll();
+        List<UsuarioResumo> usuarios = new ArrayList<>();
+        for (Usuario usuario : listaDoBanco) {
+            UsuarioResumo resumo = new UsuarioResumo(usuario.getId(), usuario.getNome(),
+                usuario.getEmail(), usuario.getPerfil());
+            usuarios.add(resumo);
+        }
         model.addAttribute("usuarios", usuarios);
         return "admin";
     }
@@ -49,7 +50,10 @@ public class AdminController {
             @RequestParam String perfil,
             Authentication autenticacao,
             RedirectAttributes atributos) {
-        if (!PERFIS.contains(perfil)) {
+        boolean perfilValido = perfil.equals("ADMIN")
+            || perfil.equals("PROFESSOR")
+            || perfil.equals("ALUNO");
+        if (!perfilValido) {
             atributos.addFlashAttribute("erro", "O perfil escolhido não é válido.");
             return "redirect:/admin";
         }
@@ -102,7 +106,8 @@ public class AdminController {
     }
 
     private void encerrarSessoes(String email) {
-        sessoes.findByPrincipalName(email).values()
-                .forEach(sessao -> sessoes.deleteById(sessao.getId()));
+        for (Session sessao : sessoes.findByPrincipalName(email).values()) {
+            sessoes.deleteById(sessao.getId());
+        }
     }
 }

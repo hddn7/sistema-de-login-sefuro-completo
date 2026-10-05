@@ -35,33 +35,33 @@
     <section class="quebra">
         <h1>Sistema de Login Seguro</h1>
         <h2>1 Introdução</h2>
-        <p>Este trabalho apresenta um sistema simples de cadastro e autenticação de usuários. A aplicação foi organizada para que a interface possa ser adaptada a diferentes temas sem alterar as regras principais de segurança.</p>
+        <p>Este documento apresenta um sistema de login feito para uma atividade de estudo. Nele, uma pessoa pode criar uma conta, entrar e sair do sistema. Cada usuário vê as páginas permitidas para o seu perfil.</p>
 
         <h2>2 Objetivo</h2>
-        <p>O objetivo é demonstrar cadastro, login, logout e autorização por perfil usando Java, Spring Boot, Spring Security, Thymeleaf e MongoDB. O sistema define os perfis ADMIN, PROFESSOR e ALUNO.</p>
+        <p>A aplicação usa Java, Spring Boot, Spring Security, Thymeleaf e MongoDB. Ela tem três perfis: ADMIN, PROFESSOR e ALUNO. As páginas e os estilos ficam separados das regras de acesso. Assim, a aparência pode ser alterada sem refazer o login.</p>
 
         <h2>3 Estrutura do sistema</h2>
-        <p>O projeto separa responsabilidades em pacotes. Os controladores recebem as requisições; os serviços executam tarefas de cadastro e localização de usuários; o repositório acessa o MongoDB; e os modelos representam os dados. As páginas HTML Thymeleaf ficam separadas dos arquivos CSS.</p>
-        <p>O cadastro público cria somente usuários ALUNO. Essa decisão evita que uma pessoa obtenha privilégios administrativos escolhendo um perfil no formulário. O primeiro administrador pode ser criado por variáveis de ambiente, sem gravar uma senha no código-fonte.</p>
-        <p>Na página administrativa, o perfil ADMIN pode consultar a lista de usuários, alterar seus perfis ou excluir contas. O sistema impede a alteração ou exclusão da conta usada pelo próprio administrador e protege a última conta com perfil ADMIN. Ao alterar um perfil ou excluir uma conta, as sessões correspondentes são encerradas.</p>
+        <p>O código Java está separado em pastas. Os controladores recebem as ações das páginas. Os serviços cuidam do cadastro e da busca de usuários. O repositório conversa com o banco, e o modelo guarda os dados de cada conta. As páginas HTML ficam na pasta de templates e o CSS fica separado.</p>
+        <p>O cadastro cria contas com o perfil ALUNO. Só o administrador pode mudar um perfil ou excluir outra conta. Ele não pode excluir a própria conta nem remover o último administrador. Quando um perfil muda ou uma conta é excluída, as sessões daquela pessoa são encerradas.</p>
+        <p>O primeiro administrador pode ser criado com as variáveis <code>ADMIN_EMAIL</code> e <code>ADMIN_PASSWORD</code>. Esses valores não ficam escritos no código-fonte.</p>
 
         <h2>4 Integração com MongoDB Atlas</h2>
-        <p>A aplicação recebe a URI do banco pela variável de ambiente <code>MONGODB_URI</code>. Assim, a credencial não precisa ser incluída no repositório. No Atlas, é necessário criar um usuário de banco, permitir o IP de conexão e usar a URI fornecida pelo serviço.</p>
-        <p>Os usuários são guardados na coleção <code>usuarios</code>. As sessões HTTP são guardadas no MongoDB pela integração Spring Session, na coleção <code>sessoes</code>. Para desenvolvimento sem Atlas, a configuração padrão usa um servidor MongoDB local.</p>
+        <p>A conexão é configurada na variável <code>MONGODB_URI</code>. No Atlas, é preciso criar um usuário do banco, permitir o endereço IP usado e copiar a URI de conexão. A URI deve ficar em uma variável de ambiente, não no GitHub.</p>
+        <p>Os dados das contas ficam na coleção <code>usuarios</code>. As sessões ficam na coleção <code>sessoes</code>. Para testar sem Atlas, a configuração também aceita um MongoDB instalado no computador.</p>
 
         <h2>5 Segurança e decisões de design</h2>
-        <p>O Spring Security gerencia a autenticação e restringe as rotas pelo perfil. As senhas são codificadas com BCrypt antes de serem armazenadas. A validação verifica nome, formato de e-mail e tamanho da senha. A proteção CSRF do Spring Security permanece ativa nos formulários.</p>
-        <p>As telas usam Thymeleaf e recebem o nome do tema pela configuração <code>APP_TEMA</code>. Um novo arquivo CSS pode personalizar a apresentação sem modificar os controladores ou as regras de autorização. Em ambiente real, o sistema deve ser publicado com HTTPS e credenciais próprias.</p>
+        <p>O Spring Security controla o login e protege as páginas de cada perfil. Antes de salvar uma senha, o sistema usa BCrypt para transformá-la em um hash. O formulário também confere o nome, o e-mail e o tamanho da senha. A proteção CSRF continua ativa.</p>
+        <p>As páginas usam Thymeleaf. A variável <code>APP_TEMA</code> escolhe o arquivo CSS. Para mudar as cores e a aparência, pode-se criar outro arquivo de estilo sem alterar as regras do login. Em um sistema publicado, deve-se usar HTTPS e uma senha forte para o banco.</p>
 
         <h2>6 Execução e adaptação</h2>
-        <p>Com JDK 17, Maven e MongoDB disponíveis, defina <code>MONGODB_URI</code> e execute <code>mvn spring-boot:run</code>. A aplicação fica disponível na porta 8080. O arquivo README descreve a configuração local e a estrutura do código.</p>
-        <p>Para adaptar o projeto a um tema de PFC, é possível alterar textos, páginas e folhas de estilo. As regras de usuário, autenticação e autorização podem continuar separadas e ser reaproveitadas.</p>
+        <p>Para executar, instale o JDK 17, o Maven e tenha acesso ao MongoDB. Configure <code>MONGODB_URI</code> e rode <code>mvn spring-boot:run</code> no terminal, dentro da pasta do projeto. Depois, abra <code>http://localhost:8080</code> no navegador.</p>
+        <p>Para usar o projeto em outro tema, podem ser trocados os textos das páginas e os arquivos CSS. O cadastro, o login e o controle dos perfis ficam separados dessas mudanças.</p>
 
         <h2>Referências</h2>
         <p class="sem-recuo">SPRING. <strong>Spring Boot Reference Documentation</strong>. Disponível em: https://docs.spring.io/spring-boot/. Acesso em: 4 out. 2026.</p>
         <p class="sem-recuo">SPRING. <strong>Spring Security Reference</strong>. Disponível em: https://docs.spring.io/spring-security/reference/. Acesso em: 4 out. 2026.</p>
         <p class="sem-recuo">MONGODB. <strong>MongoDB Atlas Documentation</strong>. Disponível em: https://www.mongodb.com/docs/atlas/. Acesso em: 4 out. 2026.</p>
-        <p class="nota">Nota: a capa já está preenchida com os dados informados pelo(a) estudante. O documento usa papel A4, fonte Arial 12, espaçamento 1,5, recuo de parágrafo e margens acadêmicas. Confira as exigências específicas da instituição antes da entrega. Para gerar o PDF novamente, abra este arquivo no navegador e use Imprimir > Salvar como PDF, com papel A4 e cabeçalhos/rodapés desativados.</p>
+        <p class="nota">A capa foi preenchida com os dados informados. O documento usa papel A4, fonte Arial 12 e espaçamento 1,5. Antes de entregar, confira se a instituição pede algum detalhe diferente. Para criar o PDF novamente, abra este arquivo no navegador e escolha Imprimir e Salvar como PDF.</p>
     </section>
 </body>
 </html>
